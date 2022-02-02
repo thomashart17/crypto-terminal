@@ -1,4 +1,4 @@
-# Crypto Miner Scraper
+# Crypto Terminal
 # Author: Thomas Hart
 # Created: February 2nd, 2022
 # Modified: February 2nd, 2022
@@ -9,7 +9,7 @@ class Console():
         self.dir = "~"
 
     def start(self):
-        print(f"miner-scraper:{self.dir}$ ", end = '')
+        print(f"crypto-terminal:{self.dir}$ ", end = '')
         self.get_input()
     
     def get_input(self):
