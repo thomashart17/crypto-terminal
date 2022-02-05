@@ -3,7 +3,9 @@
 # Created: February 2nd, 2022
 # Modified: February 2nd, 2022
 
+import crypto_scraper
 import json
+import price_checker
 import price_scraper
 
 class Console():
@@ -38,7 +40,16 @@ class Console():
         elif ipt[0] == "help":
             self.help()
         elif ipt[0] == "price":
-            self.get_price(ipt[1])
+            if price_checker.is_valid_symbol(ipt[1]):
+                self.get_price(price_checker.symbol_to_url(ipt[1]))
+            elif price_checker.is_valid_crypto(ipt[1]):
+                self.get_price(price_checker.name_to_url(ipt[1]))
+            else:
+                print(f"Could not find \"{ipt[1]}\".")
+                print("Run \"update\" to get an updated list of cryptos.")
+                self.start()
+        elif ipt[0] == "update":
+            self.update()
         else:
             self.error(ipt[0])
     
@@ -71,6 +82,10 @@ class Console():
             for line in f:
                 print(line, end = '')
             print()
+        self.start()
+    
+    def update(self):
+        crypto_scraper.update_json()
         self.start()
     
     def update_settings(self):
