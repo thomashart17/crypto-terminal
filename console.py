@@ -7,6 +7,7 @@ import crypto_scraper
 import json
 import price_checker
 import price_scraper
+import re
 
 class Console():
 
@@ -21,7 +22,10 @@ class Console():
         self.get_input()
     
     def get_input(self):
-        ipt = input().strip().lower().split()
+        ipt = re.findall(r"[^\"\s]\S*|\".+?\"", input().strip().lower())
+        for i in range(len(ipt)):
+            if ipt[i][0] == '"' and ipt[i][-1] == '"':
+                ipt[i] = ipt[i][1:-1]
         if len(ipt) == 0:
             self.start()
         # elif ipt[0] == "cd":
@@ -40,14 +44,11 @@ class Console():
         elif ipt[0] == "help":
             self.help()
         elif ipt[0] == "price":
-            if price_checker.is_valid_symbol(ipt[1]):
-                self.get_price(price_checker.symbol_to_url(ipt[1]))
-            elif price_checker.is_valid_crypto(ipt[1]):
-                self.get_price(price_checker.name_to_url(ipt[1]))
+            if len(ipt) <= 1:
+                print("No argument specified for \"price\"")
             else:
-                print(f"Could not find \"{ipt[1]}\".")
-                print("Run \"update\" to get an updated list of cryptos.")
-                self.start()
+                price_checker.get_prices(ipt)
+            self.start()
         elif ipt[0] == "update":
             self.update()
         else:
