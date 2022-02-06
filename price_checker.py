@@ -19,7 +19,7 @@ def get_prices(ipt):
                 continue
             else:
                 print(f"Invalid tag: \"{ipt[i][1]}\"")
-        if top_status:
+        elif top_status:
             if i < len(ipt):
                 for j in range(1, int(ipt[i]) + 1):
                     print(f"{j}. 1 {url_to_symbol(rank_to_url(str(j)))} = {price_scraper.get_price(rank_to_url(str(j)), currency)}")
