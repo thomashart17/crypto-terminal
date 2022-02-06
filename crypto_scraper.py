@@ -16,7 +16,9 @@ def get_cryptos():
         except:
             pass
     cryptos = {}
+    ranks = {}
     print("Getting Currencies")
+    current_rank = 1
     for i in range(max_page):
         print(f"Loading Page {i+1}/{max_page}")
         site = requests.get(f"https://www.coingecko.com/?page={i+1}")
@@ -25,7 +27,9 @@ def get_cryptos():
         for crypto in crypto_tags:
             if bs4.BeautifulSoup.get_text(crypto).strip().lower() not in cryptos:
                 cryptos[bs4.BeautifulSoup.get_text(crypto).strip().lower()] = crypto["href"].replace("/en/coins/", "")
-    return cryptos
+                ranks[str(current_rank)] = crypto["href"].replace("/en/coins/", "")
+            current_rank += 1
+    return cryptos, ranks
 
 def get_symbols():
     site = requests.get("https://www.coingecko.com/?page=1")
@@ -54,7 +58,7 @@ def get_symbols():
 def update_json():
     with open("data.json", "r") as f:
         data = json.load(f)
-    data["cryptos"] = get_cryptos()
+    data["cryptos"], data["ranks"] = get_cryptos()
     data["symbols"], data["urls"] = get_symbols()
     with open("data.json", "w") as f:
         json.dump(data, f, indent=4)

@@ -2,7 +2,6 @@
 # Author: Thomas Hart
 
 import json
-from locale import currency
 import price_scraper
 
 def get_prices(ipt):
@@ -10,12 +9,21 @@ def get_prices(ipt):
     with open("settings.json", "r") as f:
         settings = json.load(f)
         currency = settings["currency"]
+    top_status = False
     for i in range(1, len(ipt)):
         if ipt[i][0] == "-":
             if ipt[i][1] in ("n", "s"):
                 frmt = ipt[i][1]
+            elif ipt[i][1] == "t":
+                top_status = True
+                continue
             else:
                 print(f"Invalid tag: \"{ipt[i][1]}\"")
+        if top_status:
+            if i < len(ipt):
+                for j in range(1, int(ipt[i]) + 1):
+                    print(f"{j}. 1 {url_to_symbol(rank_to_url(str(j)))} = {price_scraper.get_price(rank_to_url(str(j)), currency)}")
+            top_status = False
         else:
             if frmt == "n":
                 if is_valid_crypto(ipt[i]):
@@ -58,3 +66,8 @@ def url_to_symbol(url):
     with open("data.json", "r") as f:
         data = json.load(f)
         return data["urls"][url]
+
+def rank_to_url(rank):
+    with open("data.json", "r") as f:
+        data = json.load(f)
+        return data["ranks"][rank]
