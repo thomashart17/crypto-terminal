@@ -1,2 +1,2 @@
 # crypto-terminal
-Terminal application with functionality to check current prices of cryptocurrencies.
+Terminal application with functionality to check various data related to cryptocurrencies.
