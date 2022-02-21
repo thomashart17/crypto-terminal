@@ -60,9 +60,9 @@ def get_symbols():
 
 # Updates "data.json" file with new list of symbols and currencies
 def update_json():
-    with open(f"{console.Console.PATH}data.json", "r") as f:
+    with open(f"{console.Console.PATH}data/data.json", "r") as f:
         data = json.load(f)
     data["cryptos"], data["ranks"] = get_cryptos()
     data["symbols"], data["urls"] = get_symbols()
-    with open(f"{console.Console.PATH}data.json", "w") as f:
+    with open(f"{console.Console.PATH}data/data.json", "w") as f:
         json.dump(data, f, indent=4)

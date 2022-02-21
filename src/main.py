@@ -3,7 +3,7 @@
 # Created: February 1st, 2022
 # Modified: February 1st, 2022
 
-import console
+from console import Console
 
-con = console.Console()
+con = Console()
 con.start()
