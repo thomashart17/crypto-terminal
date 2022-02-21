@@ -1,2 +1,2 @@
 @echo off
-python main.py
+python "<Insert file directory here>main.py"

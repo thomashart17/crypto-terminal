@@ -1,26 +1,32 @@
 # Crypto Terminal: Console
 # Author: Thomas Hart
-# Created: February 2nd, 2022
-# Modified: February 2nd, 2022
 
 import crypto_scraper
 import json
+import miner_scraper
 import price_checker
-import price_scraper
 import re
 
+# Main class representing the console that runs the entire terminal
 class Console():
 
+    # Update to location of directory before use
+    PATH = "C:\\"
+
+    # Initializes member variables to defaults or values saved in JSON
     def __init__(self):
         self.dir = "~"
-        with open("settings.json", "r") as f:
+        with open(f"{self.PATH}settings.json", "r") as f:
             self.settings = json.load(f)
         self.currency = self.settings["currency"]
+        self.electricity = self.settings["electricity"]
 
+    # Creates a new terminal line to take in commands
     def start(self):
         print(f"crypto-terminal:{self.dir}$ ", end = '')
         self.get_input()
     
+    # Reads inputted command and calls corresponding function
     def get_input(self):
         ipt = re.findall(r"[^\"\s]\S*|\".+?\"", input().strip().lower())
         for i in range(len(ipt)):
@@ -39,10 +45,22 @@ class Console():
                 self.start()
             else:
                 self.change_currency(ipt[1])
+        elif ipt[0] == "electricity":
+            if len(ipt) == 1:
+                print(f"Current Electricity Costs: {self.electricity} {self.currency}/kWh")
+                self.start()
+            else: 
+                self.change_electricity(ipt[1])
         elif ipt[0] == "exit":
             exit()
         elif ipt[0] == "help":
             self.help()
+        elif ipt[0] == "miners":
+            if len(ipt) <= 1:
+                print("No argument specified for \"miners\"")
+            else:
+                miner_scraper.scrape_miners(ipt[1], self.currency, self.electricity)
+            self.start()
         elif ipt[0] == "price":
             if len(ipt) <= 1:
                 print("No argument specified for \"price\"")
@@ -54,41 +72,51 @@ class Console():
         else:
             self.error(ipt[0])
     
+    # Changes currency prices will be displayed in and updates settings in JSON
     def change_currency(self, new_currency):
         self.currency = new_currency.upper()
         self.settings["currency"] = self.currency
         self.update_settings()
         self.start()
     
+    # Changes directory in which the terminal is operating
+    #  - Will be implemented after feature to save output to files
     # def change_dir(self, new_dir):
-
     #     if new_dir == "~" or new_dir == "" or new_dir == "~/":
     #         self.dir = "~"
     #     else:
     #         self.dir += new_dir
     #     self.start()
 
+    # Changes electricity cost that will be used in profitability calculations and updates setting in JSON
+    def change_electricity(self, new_electricity):
+        self.electricity = new_electricity
+        self.settings["electricity"] = self.electricity
+        self.update_settings()
+        self.start()
+
+    # Error message for when an invalid command is entered
     def error(self, err):
         print(f"\"{err}\" is not a recognized command.")
         print("For a list of available commands, use \"help\".")
         self.start()
-    
-    def get_price(self, crypto):
-        price = price_scraper.get_price(crypto, self.currency)
-        print(f"Current Price: {price}")
-        self.start()
 
+    # Displays list of available commands from "help.txt" file
     def help(self):
-        with open ("help.txt") as f:
+        # TODO: Add description for each command in "help.txt"
+        with open (f"{self.PATH}help.txt") as f:
             for line in f:
                 print(line, end = '')
             print()
         self.start()
     
+    # Updates list of available cryptocurrencies and corresponding symbols
+    # TODO: Allow updates for individual lists of values
     def update(self):
         crypto_scraper.update_json()
         self.start()
     
+    # Updates settings.json file with current settings
     def update_settings(self):
-        with open("settings.json", "w") as f:
+        with open(f"{self.PATH}settings.json", "w") as f:
             json.dump(self.settings, f)

@@ -1,11 +1,10 @@
 # Crpyto Terminal: Price Scraper
 # Author: Thomas Hart
-# Created: February 2nd, 2022
-# Modified: Febrary 2nd, 2022
 
 import bs4
 import requests
 
+# Scrapes price of given cryptocurrency from Coin Gecko
 def get_price(crypto, currency):
     url = f"https://www.coingecko.com/en/coins/{crypto.lower()}/{currency.lower()}"
     site = requests.get(url)

@@ -2,9 +2,11 @@
 # Author: Thomas Hart
 
 import bs4
+import console
 import json
 import requests
 
+# Scrapes list of all cryptocurrencies currently available on Coin Gecko
 def get_cryptos():
     site = requests.get("https://www.coingecko.com/?page=1")
     soup = bs4.BeautifulSoup(site.text, "html.parser")
@@ -31,6 +33,7 @@ def get_cryptos():
             current_rank += 1
     return cryptos, ranks
 
+# Scrapes list of symbols for all cryptocurrencies currently available on Coin Gecko
 def get_symbols():
     site = requests.get("https://www.coingecko.com/?page=1")
     soup = bs4.BeautifulSoup(site.text, "html.parser")
@@ -54,11 +57,12 @@ def get_symbols():
                 symbols[bs4.BeautifulSoup.get_text(crypto).strip().replace("$", "")] = crypto["href"].replace("/en/coins/", "")
                 urls[crypto["href"].replace("/en/coins/", "")] = bs4.BeautifulSoup.get_text(crypto).strip().replace("$", "")
     return symbols, urls
-    
+
+# Updates "data.json" file with new list of symbols and currencies
 def update_json():
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
     data["cryptos"], data["ranks"] = get_cryptos()
     data["symbols"], data["urls"] = get_symbols()
-    with open("data.json", "w") as f:
+    with open(f"{console.Console.PATH}data.json", "w") as f:
         json.dump(data, f, indent=4)

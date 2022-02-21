@@ -1,12 +1,17 @@
 # Crypto Terminal: Price Checker
 # Author: Thomas Hart
 
+import console
 import json
 import price_scraper
 
+# Gets cryptocurrency prices based on input parameters
+#  - Compares to list of valid currencies in "data.json" file
+#  - Option to use -s or -n tag to input symbols or names
+#  - Option to use -t tag to check top currencies
 def get_prices(ipt):
     frmt = "s"
-    with open("settings.json", "r") as f:
+    with open(f"{console.Console.PATH}settings.json", "r") as f:
         settings = json.load(f)
         currency = settings["currency"]
     top_status = False
@@ -38,36 +43,42 @@ def get_prices(ipt):
                     print(f"Could not find \"{ipt[i]}\".")
                     print("Run \"update\" to get an updated list of cryptos.") 
 
+# Compares input symbol to list of valid symbols
 def is_valid_symbol(symbol):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         if symbol.upper() in data["symbols"]: 
             return True
     return False
 
+# Converts symbol to corresponding URL value for Coin Gecko
 def symbol_to_url(symbol):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         return data["symbols"][symbol.upper()]
 
+# Checks if input name is valid
 def is_valid_crypto(crypto):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         if crypto.lower() in data["cryptos"]: 
             return True
     return False
 
+# Converts name to corresponding URL for Coin Gecko
 def name_to_url(name):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         return data["cryptos"][name.lower()]
 
+# Converts URL from Coin Gecko into corresponding symbol
 def url_to_symbol(url):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         return data["urls"][url]
 
+# Takes given rank and finds the corresponding URL
 def rank_to_url(rank):
-    with open("data.json", "r") as f:
+    with open(f"{console.Console.PATH}data.json", "r") as f:
         data = json.load(f)
         return data["ranks"][rank]
