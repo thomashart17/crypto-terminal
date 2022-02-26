@@ -1,12 +1,11 @@
 # Crypto Terminal: Miner Checker
 # Author: Thomas Hart
 
-import bs4
 import console
 import json
 import mechanize
 import miner_scraper
-import requests
+import urllib
 
 def get_miners(ipt):
     with open(f"{console.Console.PATH}/data/settings.json", "r") as f:
@@ -18,3 +17,7 @@ def get_miners(ipt):
             miner_scraper.scrape_miners(ipt[i], currency, electricity)
         except mechanize._mechanize.FormNotFoundError:
             print(f"Could not find \"{ipt[i]}\".")
+        except urllib.error.URLError:
+            print("Error: Connection failed")
+        except:
+            print("An unknown error occurred")
