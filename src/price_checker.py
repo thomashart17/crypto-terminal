@@ -4,6 +4,7 @@
 import console
 import json
 import price_scraper
+import requests
 
 # Gets cryptocurrency prices based on input parameters
 #  - Compares to list of valid currencies in "data.json" file
@@ -27,18 +28,29 @@ def get_prices(ipt):
         elif top_status:
             if i < len(ipt):
                 for j in range(1, int(ipt[i]) + 1):
-                    print(f"{j}. 1 {url_to_symbol(rank_to_url(str(j)))} = {price_scraper.get_price(rank_to_url(str(j)), currency)}")
-            top_status = False
+                    try:
+                        print(f"{j}. 1 {url_to_symbol(rank_to_url(str(j)))} = {price_scraper.get_price(rank_to_url(str(j)), currency)}")
+                    except requests.exceptions.ConnectionError:
+                        print("Error: Connection failed")
+            break
         else:
             if frmt == "n":
                 if is_valid_crypto(ipt[i]):
-                    print(f"1 {url_to_symbol(name_to_url(ipt[i].lower())).upper()} = {price_scraper.get_price(name_to_url(ipt[i]), currency)}")
+                    try:
+                        print(f"1 {url_to_symbol(name_to_url(ipt[i].lower())).upper()} = {price_scraper.get_price(name_to_url(ipt[i]), currency)}")
+                    except requests.exceptions.ConnectionError:
+                        print("Error: Connection failed")
+                        break
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
                     print("Run \"update\" to get an updated list of cryptos.")
             elif frmt == "s":
                 if is_valid_symbol(ipt[i]):
-                    print(f"1 {ipt[i].upper()} = {price_scraper.get_price(symbol_to_url(ipt[i]), currency)}")
+                    try:
+                        print(f"1 {ipt[i].upper()} = {price_scraper.get_price(symbol_to_url(ipt[i]), currency)}")
+                    except requests.exceptions.ConnectionError:
+                        print("Error: Connection failed")
+                        break
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
                     print("Run \"update\" to get an updated list of cryptos.") 
