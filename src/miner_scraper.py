@@ -17,5 +17,6 @@ def scrape_miners(crypto, currency, electricity):
     soup = bs4.BeautifulSoup(browser.response().read(), "html.parser")
     miners = soup.find_all("div", class_="td flexHardware")
     prices = soup.find_all("div", class_="td rmv1 flexProfit profit_order")
+    print(f"\"{crypto.upper()}\" miners:")
     for i in range(len(miners)):
         print(bs4.BeautifulSoup.get_text(miners[i]), bs4.BeautifulSoup.get_text(prices[i]))

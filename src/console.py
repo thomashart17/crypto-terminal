@@ -3,7 +3,7 @@
 
 import crypto_scraper
 import json
-import miner_scraper
+import miner_checker
 import os
 import price_checker
 import re
@@ -59,7 +59,7 @@ class Console():
             if len(ipt) <= 1:
                 print("No argument specified for \"miners\"")
             else:
-                miner_scraper.scrape_miners(ipt[1], self.currency, self.electricity)
+                miner_checker.get_miners(ipt)
             self.start()
         elif ipt[0] == "price":
             if len(ipt) <= 1:
