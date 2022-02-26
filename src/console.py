@@ -4,19 +4,19 @@
 import crypto_scraper
 import json
 import miner_scraper
+import os
 import price_checker
 import re
 
 # Main class representing the console that runs the entire terminal
 class Console():
 
-    # Update to location of directory before use
-    PATH = "C:/Users/Thomas Hart/Documents/crypto-terminal/"
+    PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
     # Initializes member variables to defaults or values saved in JSON
     def __init__(self):
         self.dir = "~"
-        with open(f"{self.PATH}data/settings.json", "r") as f:
+        with open(f"{self.PATH}/data/settings.json", "r") as f:
             self.settings = json.load(f)
         self.currency = self.settings["currency"]
         self.electricity = self.settings["electricity"]
@@ -104,7 +104,7 @@ class Console():
     # Displays list of available commands from "help.txt" file
     def help(self):
         # TODO: Add description for each command in "help.txt"
-        with open (f"{self.PATH}data/help.txt") as f:
+        with open (f"{self.PATH}/data/help.txt") as f:
             for line in f:
                 print(line, end = '')
             print()
@@ -118,5 +118,5 @@ class Console():
     
     # Updates settings.json file with current settings
     def update_settings(self):
-        with open(f"{self.PATH}data/settings.json", "w") as f:
+        with open(f"{self.PATH}/data/settings.json", "w") as f:
             json.dump(self.settings, f, indent=4)
