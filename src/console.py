@@ -16,10 +16,15 @@ class Console():
     # Initializes member variables to defaults or values saved in JSON
     def __init__(self):
         self.dir = "~"
-        with open(f"{self.PATH}/data/settings.json", "r") as f:
-            self.settings = json.load(f)
-        self.currency = self.settings["currency"]
-        self.electricity = self.settings["electricity"]
+        try:
+            with open(f"{self.PATH}/data/settings.json", "r") as f:
+                self.settings = json.load(f)
+            self.currency = self.settings["currency"]
+            self.electricity = self.settings["electricity"]
+        except FileNotFoundError:
+            print("Error: Settings file not found")
+            print("Loading default settings")
+            self.create_settings()
 
     # Creates a new terminal line to take in commands
     def start(self):
@@ -94,6 +99,16 @@ class Console():
         self.settings["electricity"] = self.electricity
         self.update_settings()
         self.start()
+    
+    # Creates a new settings file if it is missing
+    def create_settings(self):
+        settings = {
+            "currency": "USD",
+            "electricity": "0.1",
+        }
+        with open(f"{self.PATH}/data/settings.json", "w") as f:
+            json.dump(settings, f, indent=4)
+        self.settings = settings
 
     # Error message for when an invalid command is entered
     def error(self, err):
