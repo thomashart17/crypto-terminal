@@ -25,6 +25,10 @@ class Console():
             print("Error: Settings file not found")
             print("Loading default settings")
             self.create_settings()
+        except json.decoder.JSONDecodeError:
+            print("Error: Missing values in settings")
+            print("Loading default settings")
+            self.create_settings()
 
     # Creates a new terminal line to take in commands
     def start(self):
