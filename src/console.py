@@ -140,14 +140,5 @@ class Console():
     
     # Updates settings.json file with current settings
     def update_settings(self):
-        try:
-            with open(f"{self.PATH}/data/settings.json", "w") as f:
-                json.dump(self.settings, f, indent=4)
-        except FileNotFoundError:
-            print("Error: Settings file not found")
-            print("Loading default settings")
-            self.create_settings()
-        except json.decoder.JSONDecodeError:
-            print("Error: Missing values in settings")
-            print("Loading default settings")
-            self.create_settings()
+        with open(f"{self.PATH}/data/settings.json", "w") as f:
+            json.dump(self.settings, f, indent=4)
