@@ -89,7 +89,7 @@ def name_to_url(name):
         data = json.load(f)
         return data["names"][name.lower()]
 
-# Converts URL from Coin Gecko into corresponding symbol
+# Converts name into corresponding symbol
 def name_to_symbol(name):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
