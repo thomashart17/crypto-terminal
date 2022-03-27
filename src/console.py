@@ -1,7 +1,7 @@
 # Crypto Terminal: Console
 # Author: Thomas Hart
 
-import crypto_scraper
+import crypto_updater
 import json
 import miner_checker
 import os
@@ -83,7 +83,7 @@ class Console():
     
     # Changes currency prices will be displayed in and updates settings in JSON
     def change_currency(self, new_currency):
-        self.currency = new_currency.upper()
+        self.currency = new_currency.lower()
         self.settings["currency"] = self.currency
         self.update_settings()
         self.start()
@@ -135,7 +135,7 @@ class Console():
     # Updates list of available cryptocurrencies and corresponding symbols
     # TODO: Allow updates for individual lists of values
     def update(self):
-        crypto_scraper.update_json()
+        crypto_updater.update_json()
         self.start()
     
     # Updates settings.json file with current settings

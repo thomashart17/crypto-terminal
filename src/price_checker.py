@@ -4,6 +4,7 @@
 import console
 import json
 import price_scraper
+import pycoingecko
 import requests
 
 # Gets cryptocurrency prices based on input parameters
@@ -11,6 +12,7 @@ import requests
 #  - Option to use -s or -n tag to input symbols or names
 #  - Option to use -t tag to check top currencies
 def get_prices(ipt):
+    coin_gecko = pycoingecko.CoinGeckoAPI()
     frmt = "s"
     with open(f"{console.Console.PATH}/data/settings.json", "r") as f:
         settings = json.load(f)
@@ -27,30 +29,36 @@ def get_prices(ipt):
                 print(f"Invalid tag: \"{ipt[i][1]}\"")
         elif top_status:
             if i < len(ipt):
-                for j in range(1, int(ipt[i]) + 1):
-                    try:
-                        print(f"{j}. 1 {url_to_symbol(rank_to_url(str(j)))} = {price_scraper.get_price(rank_to_url(str(j)), currency)}")
-                    except requests.exceptions.ConnectionError:
-                        print("Error: Connection failed")
-            break
+                size = len(str(ipt[i])) + 1
+                remaining = int(ipt[i])
+                rank = 1
+                while remaining > 0:
+                    if remaining <= 250:
+                        coins = coin_gecko.get_coins_markets(currency, per_page=ipt[i])
+                    else:
+                        coins = coin_gecko.get_coins_markets(currency, per_page=250)
+                    for coin in coins:
+                        symbol = coin["symbol"].upper()
+                        price = coin["current_price"]
+                        rank_str = str(rank) + "."
+                        print((f"{rank_str:<{size}} 1 {symbol} = {price} {currency.upper()}"))
+                        rank += 1
+                    remaining -= 250
+
         else:
             if frmt == "n":
-                if is_valid_crypto(ipt[i]):
-                    try:
-                        print(f"1 {url_to_symbol(name_to_url(ipt[i].lower())).upper()} = {price_scraper.get_price(name_to_url(ipt[i]), currency)}")
-                    except requests.exceptions.ConnectionError:
-                        print("Error: Connection failed")
-                        break
+                if is_valid_name(ipt[i]):
+                    url = name_to_url(ipt[i])
+                    price = coin_gecko.get_price(url, currency)[url][currency]
+                    print(f"1 {name_to_symbol(ipt[i]).upper()} = {price} {currency.upper()}")
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
                     print("Run \"update\" to get an updated list of cryptos.")
             elif frmt == "s":
                 if is_valid_symbol(ipt[i]):
-                    try:
-                        print(f"1 {ipt[i].upper()} = {price_scraper.get_price(symbol_to_url(ipt[i]), currency)}")
-                    except requests.exceptions.ConnectionError:
-                        print("Error: Connection failed")
-                        break
+                    url = symbol_to_url(ipt[i])
+                    price = coin_gecko.get_price(url, currency)[url][currency]
+                    print(f"1 {ipt[i].upper()} = {price} {currency.upper()}")
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
                     print("Run \"update\" to get an updated list of cryptos.") 
@@ -59,7 +67,7 @@ def get_prices(ipt):
 def is_valid_symbol(symbol):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
-        if symbol.upper() in data["symbols"]: 
+        if symbol.lower() in data["symbols"]: 
             return True
     return False
 
@@ -67,13 +75,13 @@ def is_valid_symbol(symbol):
 def symbol_to_url(symbol):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
-        return data["symbols"][symbol.upper()]
+        return data["symbols"][symbol]
 
 # Checks if input name is valid
-def is_valid_crypto(crypto):
+def is_valid_name(name):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
-        if crypto.lower() in data["cryptos"]: 
+        if name.lower() in data["names"]: 
             return True
     return False
 
@@ -81,13 +89,13 @@ def is_valid_crypto(crypto):
 def name_to_url(name):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
-        return data["cryptos"][name.lower()]
+        return data["names"][name.lower()]
 
 # Converts URL from Coin Gecko into corresponding symbol
-def url_to_symbol(url):
+def name_to_symbol(name):
     with open(f"{console.Console.PATH}/data/data.json", "r") as f:
         data = json.load(f)
-        return data["urls"][url]
+        return data["urls"][data["names"][name.lower()]]
 
 # Takes given rank and finds the corresponding URL
 def rank_to_url(rank):
