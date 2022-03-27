@@ -3,9 +3,7 @@
 
 import console
 import json
-import price_scraper
 import pycoingecko
-import requests
 
 # Gets cryptocurrency prices based on input parameters
 #  - Compares to list of valid currencies in "data.json" file
