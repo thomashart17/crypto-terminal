@@ -22,27 +22,31 @@ def get_prices(ipt):
                 frmt = ipt[i][1]
             elif ipt[i][1] == "t":
                 top_status = True
-                continue
             else:
                 print(f"Invalid tag: \"{ipt[i][1]}\"")
         elif top_status:
             if i < len(ipt):
-                size = len(str(ipt[i])) + 1
-                remaining = int(ipt[i])
-                rank = 1
-                while remaining > 0:
-                    if remaining <= 250:
-                        coins = coin_gecko.get_coins_markets(currency, per_page=ipt[i])
-                    else:
-                        coins = coin_gecko.get_coins_markets(currency, per_page=250)
-                    for coin in coins:
-                        symbol = coin["symbol"].upper()
-                        price = coin["current_price"]
-                        rank_str = str(rank) + "."
-                        print((f"{rank_str:<{size}} 1 {symbol} = {price} {currency.upper()}"))
-                        rank += 1
-                    remaining -= 250
-
+                try:
+                    remaining = int(ipt[i])
+                    if remaining < 1:
+                        print("Minimum value of 1 required for \"price -t\"")
+                    size = len(str(ipt[i])) + 1
+                    rank = 1
+                    while remaining > 0:
+                        if remaining <= 250:
+                            coins = coin_gecko.get_coins_markets(currency, per_page=ipt[i])
+                        else:
+                            coins = coin_gecko.get_coins_markets(currency, per_page=250)
+                        for coin in coins:
+                            symbol = coin["symbol"].upper()
+                            price = coin["current_price"]
+                            rank_str = str(rank) + "."
+                            print((f"{rank_str:<{size}} 1 {symbol} = {price} {currency.upper()}"))
+                            rank += 1
+                        remaining -= 250
+                except ValueError:
+                    print(f"Invalid argument \"{ipt[i]}\" for \"price -t\"")
+            top_status = False
         else:
             if frmt == "n":
                 if is_valid_name(ipt[i]):
