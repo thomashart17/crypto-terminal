@@ -1,7 +1,7 @@
-CURRENCY
-ELECTRICITY
-EXIT
-HELP
-MINERS
-PRICE
-UPDATE
+CURRENCY: Displays the current currency or updates to a specified currency.
+ELECTRICITY: Displays the current electricity cost per kWh or updates to a specified cost.
+EXIT: Exits the application back to the command line.
+HELP: Displays a list of available commands and their uses.
+MINERS: Displays a list of all miners available for the input currency as well as their profitability per day.
+PRICE: Displays prices for the input cryptocurrencies.
+UPDATE: Updates the list of available currencies to match what is found on Coin Gecko.

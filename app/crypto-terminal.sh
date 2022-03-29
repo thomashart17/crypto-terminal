@@ -1,0 +1,1 @@
+python <INSERT YOUR DIRECTORY HERE>/src/main.py
