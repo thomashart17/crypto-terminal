@@ -51,7 +51,7 @@ def get_prices(ipt):
             if frmt == "n":
                 if is_valid_name(ipt[i]):
                     url = name_to_url(ipt[i])
-                    price = coin_gecko.get_price(url, currency)[url][currency]
+                    price = coin_gecko.get_price(url, currency)[url][currency.lower()]
                     print(f"1 {name_to_symbol(ipt[i]).upper()} = {price} {currency.upper()}")
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
@@ -59,7 +59,7 @@ def get_prices(ipt):
             elif frmt == "s":
                 if is_valid_symbol(ipt[i]):
                     url = symbol_to_url(ipt[i])
-                    price = coin_gecko.get_price(url, currency)[url][currency]
+                    price = coin_gecko.get_price(url, currency)[url][currency.lower()]
                     print(f"1 {ipt[i].upper()} = {price} {currency.upper()}")
                 else:
                     print(f"Could not find \"{ipt[i]}\".")
