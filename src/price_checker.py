@@ -18,12 +18,12 @@ def get_prices(ipt):
     top_status = False
     for i in range(1, len(ipt)):
         if ipt[i][0] == "-":
-            if ipt[i][1] in ("n", "s"):
+            if ipt[i][1:] in ("n", "s"):
                 frmt = ipt[i][1]
-            elif ipt[i][1] == "t":
+            elif ipt[i][1:] == "t":
                 top_status = True
             else:
-                print(f"Invalid tag: \"{ipt[i][1]}\"")
+                print(f"Invalid tag: \"{ipt[i][1:]}\"")
         elif top_status:
             if i < len(ipt):
                 try:

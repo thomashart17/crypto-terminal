@@ -83,7 +83,7 @@ class Console():
     
     # Changes currency prices will be displayed in and updates settings in JSON
     def change_currency(self, new_currency):
-        self.currency = new_currency.lower()
+        self.currency = new_currency.upper()
         self.settings["currency"] = self.currency
         self.update_settings()
         self.start()
