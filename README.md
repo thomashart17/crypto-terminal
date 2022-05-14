@@ -2,7 +2,7 @@
 ## Description
 Crypto Terminal is command line application that allows users to get data about a variety of cryptocurrencies. It makes use of the Coin Gecko API to get data about the top 1000 cryptocurrencies. This includes prices for individual coins by symbol or name as well as prices for top currencies by market cap. To get data for the most profitable mining hardware by currency, the application makes use of the Python mechanize and bs4 libraries. These libraries are used to scrape data from Minerstat based on given currency and electricity costs.
 ## Dependencies
-In order to use this appliation, users will need Python version 3.7.4 and the following Python libraries installed on their device:
+In order to use this appliation, users will need Python version 3.7 and the following Python libraries installed on their device:
 - [bs4](https://pypi.org/project/bs4)
 - [mechanize](https://pypi.org/project/mechanize)
 - [pycoingecko](https://pypi.org/project/pycoingecko)
