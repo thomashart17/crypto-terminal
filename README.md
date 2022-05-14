@@ -7,7 +7,7 @@ In order to use this appliation, users will need Python version 3.7 and the foll
 - [mechanize](https://pypi.org/project/mechanize)
 - [pycoingecko](https://pypi.org/project/pycoingecko)
 ## Installation
-Clone the repository to your device in the your desired directory:
+Clone the repository to your device in your desired directory:
 
 `git clone https://github.com/thomashart17/crypto-terminal`
 
